@@ -279,6 +279,7 @@
             <th>Доход за год, $</th>
             <th>Доход нарастающим итогом, $</th>
             <th>Выплачено дивидендов, $</th>
+            <th>Общая капитализация (примерно), $</th>
             <th>Остаток cash, $</th>
           </tr>
         </thead>
@@ -475,29 +476,38 @@
             cumulativePaidDividends += paidDividendsThisYear;
           }
 
-          const treePrice = getYearTreePrice(year);
-          const boughtThisYear = Math.floor(cashBalance / treePrice);
+         const treePrice = getYearTreePrice(year);
+const boughtThisYear = Math.floor(cashBalance / treePrice);
 
-          if (boughtThisYear > 0) {
-            treeLots.push({ yearBought: year, count: boughtThisYear });
-            totalTrees += boughtThisYear;
-            cashBalance -= boughtThisYear * treePrice;
-          }
+if (boughtThisYear > 0) {
+  treeLots.push({ yearBought: year, count: boughtThisYear });
+  totalTrees += boughtThisYear;
+  cashBalance -= boughtThisYear * treePrice;
+}
 
-          const row = document.createElement('tr');
-          row.innerHTML = `
-            <td>${year}</td>
-            <td>${formatMoney(monthlyContribution)}</td>
-            <td>${formatMoney(annualContribution)}</td>
-            <td>${formatMoney(treePrice)}</td>
-            <td>${formatInt(boughtThisYear)}</td>
-            <td>${formatInt(totalTrees)}</td>
-            <td>${formatMoney(annualIncome)}</td>
-            <td>${formatMoney(cumulativeIncome)}</td>
-            <td>${formatMoney(paidDividendsThisYear)}</td>
-            <td>${formatMoney(cashBalance)}</td>
-          `;
-          resultBodyEl.appendChild(row);
+let estimatedCapitalization = 0;
+
+if (year <= 10) {
+  estimatedCapitalization = totalTrees * treePrice * Math.pow(1.1, year - 1);
+} else {
+  estimatedCapitalization = annualIncome * 5;
+}
+
+const row = document.createElement('tr');
+row.innerHTML = `
+  <td>${year}</td>
+  <td>${formatMoney(monthlyContribution)}</td>
+  <td>${formatMoney(annualContribution)}</td>
+  <td>${formatMoney(treePrice)}</td>
+  <td>${formatInt(boughtThisYear)}</td>
+  <td>${formatInt(totalTrees)}</td>
+  <td>${formatMoney(annualIncome)}</td>
+  <td>${formatMoney(cumulativeIncome)}</td>
+  <td>${formatMoney(paidDividendsThisYear)}</td>
+  <td>${formatMoney(estimatedCapitalization)}</td>
+  <td>${formatMoney(cashBalance)}</td>
+`;
+resultBodyEl.appendChild(row);
         }
 
         let lastYearIncome = 0;
