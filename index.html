@@ -1,4 +1,4 @@
-HTML <div id="olive-calc-app">
+<div id="olive-calc-app">
   <style>
     #olive-calc-app {
       font-family: Arial, sans-serif;
@@ -196,7 +196,7 @@ HTML <div id="olive-calc-app">
 
         <div>
           <label for="olive-annualGrowth">Рост взноса в год (%)</label>
- <input type="number" id="olive-annualGrowth" value="20" min="0" step="0.01">
+          <input type="number" id="olive-annualGrowth" value="20" min="0" step="0.01">
         </div>
 
         <div>
@@ -295,8 +295,7 @@ HTML <div id="olive-calc-app">
       const stopDividendWrapEl = root.querySelector('#olive-stopDividendWrap');
       const stopReinvestYearEl = root.querySelector('#olive-stopReinvestYear');
 
-      const resultBodyEl = root.
- querySelector('#olive-resultBody');
+      const resultBodyEl = root.querySelector('#olive-resultBody');
       const summaryEl = root.querySelector('#olive-summary');
       const calcBtnEl = root.querySelector('#olive-calc-btn');
 
@@ -408,8 +407,7 @@ HTML <div id="olive-calc-app">
           let annualIncome = 0;
           for (const lot of treeLots) {
             const age = year - lot.yearBought;
-            annualIncome += lot.
- count * getTreeIncomeByAge(age);
+            annualIncome += lot.count * getTreeIncomeByAge(age);
           }
 
           cumulativeIncome += annualIncome;
@@ -457,13 +455,13 @@ HTML <div id="olive-calc-app">
 
         let personalModeTitle = '';
         if (personalMode === 'all10') personalModeTitle = 'Личные вложения до 10 года';
-        if (personalMode === 'custom') personalModeTitle = Личные вложения до ${stopPersonalYear} года;
+        if (personalMode === 'custom') personalModeTitle = `Личные вложения до ${stopPersonalYear} года`;
         if (personalMode === 'none') personalModeTitle = 'Без личных ежегодных вложений';
 
         let dividendModeTitle = '';
         if (dividendMode === 'no') dividendModeTitle = 'Без реинвеста дивидендов';
         if (dividendMode === 'all') dividendModeTitle = 'Реинвест дивидендов всегда';
-        if (dividendMode === 'custom') dividendModeTitle = Реинвест дивидендов до ${stopReinvestYear} года;
+        if (dividendMode === 'custom') dividendModeTitle = `Реинвест дивидендов до ${stopReinvestYear} года`;
 
         const cards = [
           { title: 'Всего деревьев', value: formatInt(totalTrees) },
@@ -479,7 +477,7 @@ HTML <div id="olive-calc-app">
         cards.forEach(card => {
           const div = document.createElement('div');
           div.className = 'summary-box';
-          div.innerHTML = <h3>${card.title}</h3><p>${card.value}</p>;
+          div.innerHTML = `<h3>${card.title}</h3><p>${card.value}</p>`;
           summaryEl.appendChild(div);
         });
       }
