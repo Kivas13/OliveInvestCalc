@@ -1,0 +1,495 @@
+HTML <div id="olive-calc-app">
+  <style>
+    #olive-calc-app {
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: #e5e7eb;
+      padding: 24px;
+      border-radius: 20px;
+      box-sizing: border-box;
+    }
+
+    #olive-calc-app * {
+      box-sizing: border-box;
+    }
+
+    #olive-calc-app .container {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    #olive-calc-app h1 {
+      margin: 0 0 20px;
+      color: #f8fafc;
+      font-size: 32px;
+      line-height: 1.2;
+    }
+
+    #olive-calc-app .card {
+      background: #111827;
+      border: 1px solid #334155;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    #olive-calc-app .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    #olive-calc-app label {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 6px;
+      color: #cbd5e1;
+    }
+
+    #olive-calc-app input,
+    #olive-calc-app select {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid #475569;
+      background: #1e293b;
+      color: #f8fafc;
+      font-size: 14px;
+      outline: none;
+    }
+
+    #olive-calc-app input:focus,
+    #olive-calc-app select:focus {
+      border-color: #60a5fa;
+    }
+
+    #olive-calc-app button {
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 12px 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 12px;
+      transition: 0.2s ease;
+    }
+
+    #olive-calc-app button:hover {
+      background: #1d4ed8;
+    }
+
+    #olive-calc-app .summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    #olive-calc-app .summary-box {
+      background: #0b1220;
+      border: 1px solid #334155;
+      border-radius: 14px;
+      padding: 16px;
+    }
+
+    #olive-calc-app .summary-box h3 {
+      margin: 0 0 8px;
+      font-size: 14px;
+      color: #93c5fd;
+      font-weight: 600;
+      line-height: 1.4;
+    }
+
+    #olive-calc-app .summary-box p {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 700;
+      color: #f8fafc;
+      line-height: 1.2;
+    }
+
+    #olive-calc-app .table-wrap {
+      overflow-x: auto;
+      margin-top: 20px;
+      border-radius: 14px;
+      border: 1px solid #334155;
+    }
+
+    #olive-calc-app table {
+      width: 100%;
+      min-width: 1450px;
+      border-collapse: collapse;
+      background: #0b1220;
+    }
+
+    #olive-calc-app th,
+    #olive-calc-app td {
+      border: 1px solid #334155;
+      padding: 10px 12px;
+      text-align: center;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    #olive-calc-app th {
+      background: #1e3a8a;
+      color: #fff;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      white-space: normal;
+    }
+
+    #olive-calc-app tr:nth-child(even) td {
+      background: #111827;
+    }
+
+    #olive-calc-app tr:nth-child(odd) td {
+      background: #0f172a;
+    }
+
+    #olive-calc-app .note {
+      color: #94a3b8;
+      font-size: 13px;
+      margin-top: 12px;
+      line-height: 1.6;
+    }
+
+    #olive-calc-app .hidden {
+      display: none;
+    }
+
+    @media (max-width: 640px) {
+      #olive-calc-app {
+        padding: 16px;
+        border-radius: 16px;
+      }
+
+      #olive-calc-app h1 {
+        font-size: 24px;
+      }
+
+      #olive-calc-app .card {
+        padding: 16px;
+      }
+
+      #olive-calc-app .summary-box p {
+        font-size: 20px;
+      }
+
+      #olive-calc-app button {
+        width: 100%;
+      }
+    }
+  </style>
+
+  <div class="container">
+    <h1>Калькулятор оливкового инвестирования</h1>
+
+    <div class="card">
+      <div class="grid">
+        <div>
+          <label for="olive-monthlyContribution">Стартовый ежемесячный взнос ($)</label>
+          <input type="number" id="olive-monthlyContribution" value="400" min="0" step="0.01">
+        </div>
+
+        <div>
+          <label for="olive-annualGrowth">Рост взноса в год (%)</label>
+ <input type="number" id="olive-annualGrowth" value="20" min="0" step="0.01">
+        </div>
+
+        <div>
+          <label for="olive-years">Сколько лет считать</label>
+          <input type="number" id="olive-years" value="15" min="1" max="50" step="1">
+        </div>
+
+        <div>
+          <label for="olive-initialInvestment">Стартовая инвестиция ($)</label>
+          <input type="number" id="olive-initialInvestment" value="0" min="0" step="0.01">
+        </div>
+
+        <div>
+          <label for="olive-initialTrees">Стартово куплено деревьев</label>
+          <input type="number" id="olive-initialTrees" value="0" min="0" step="1">
+        </div>
+
+        <div>
+          <label for="olive-personalMode">Личные вложения</label>
+          <select id="olive-personalMode">
+            <option value="all10" selected>До 10 года по базовой модели</option>
+            <option value="custom">До выбранного года</option>
+            <option value="none">Без личных ежегодных вложений</option>
+          </select>
+        </div>
+
+        <div id="olive-stopPersonalWrap">
+          <label for="olive-stopPersonalYear">До какого года делать личные вложения</label>
+          <input type="number" id="olive-stopPersonalYear" value="10" min="0" max="50" step="1">
+        </div>
+
+        <div>
+          <label for="olive-dividendMode">Режим дивидендов</label>
+          <select id="olive-dividendMode">
+            <option value="no">Не реинвестировать</option>
+            <option value="all">Реинвестировать всегда</option>
+            <option value="custom" selected>Реинвестировать до выбранного года</option>
+          </select>
+        </div>
+
+        <div id="olive-stopDividendWrap">
+          <label for="olive-stopReinvestYear">До какого года реинвестировать дивиденды</label>
+          <input type="number" id="olive-stopReinvestYear" value="10" min="0" max="50" step="1">
+        </div>
+      </div>
+
+      <button id="olive-calc-btn" type="button">Рассчитать</button>
+
+      <div class="note">
+        Логика модели:
+        <br>• стартовая покупка: 159 $ если 3–99 деревьев, 149 $ если 100–2999, 139 $ если 3000+
+        <br>• годовые покупки: 159 $ с 1 по 5 год, 179 $ с 6 по 10 год, далее 179 $
+        <br>• доходность дерева по возрасту: 5-й год = 20 $, далее до 10-го +10 $, после 10-го до 15-го +5 $, затем 95 $
+        <br>• личные вложения и реинвест дивидендов теперь управляются отдельно
+      </div>
+    </div>
+
+    <div class="summary" id="olive-summary"></div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Год</th>
+            <th>Взнос в месяц, $</th>
+            <th>Личные вложения за год, $</th>
+            <th>Цена дерева, $</th>
+            <th>Куплено деревьев за год</th>
+            <th>Деревьев нарастающим итогом</th>
+            <th>Доход за год, $</th>
+            <th>Доход нарастающим итогом, $</th>
+            <th>Выплачено дивидендов, $</th>
+            <th>Остаток cash, $</th>
+          </tr>
+        </thead>
+        <tbody id="olive-resultBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const root = document.getElementById('olive-calc-app');
+
+      const monthlyContributionEl = root.querySelector('#olive-monthlyContribution');
+      const annualGrowthEl = root.querySelector('#olive-annualGrowth');
+      const yearsEl = root.querySelector('#olive-years');
+      const initialInvestmentEl = root.querySelector('#olive-initialInvestment');
+      const initialTreesEl = root.querySelector('#olive-initialTrees');
+
+      const personalModeEl = root.querySelector('#olive-personalMode');
+      const stopPersonalWrapEl = root.querySelector('#olive-stopPersonalWrap');
+      const stopPersonalYearEl = root.querySelector('#olive-stopPersonalYear');
+
+      const dividendModeEl = root.querySelector('#olive-dividendMode');
+      const stopDividendWrapEl = root.querySelector('#olive-stopDividendWrap');
+      const stopReinvestYearEl = root.querySelector('#olive-stopReinvestYear');
+
+      const resultBodyEl = root.
+ querySelector('#olive-resultBody');
+      const summaryEl = root.querySelector('#olive-summary');
+      const calcBtnEl = root.querySelector('#olive-calc-btn');
+
+      function getInitialTreePrice(treeCount) {
+        if (treeCount >= 3000) return 139;
+        if (treeCount >= 100) return 149;
+        if (treeCount >= 3) return 159;
+        return 159;
+      }
+
+      function getYearTreePrice(year) {
+        return year <= 5 ? 159 : 179;
+      }
+
+      function getTreeIncomeByAge(age) {
+        if (age <= 4) return 0;
+        if (age === 5) return 20;
+        if (age === 6) return 30;
+        if (age === 7) return 40;
+        if (age === 8) return 50;
+        if (age === 9) return 60;
+        if (age === 10) return 70;
+        if (age === 11) return 75;
+        if (age === 12) return 80;
+        if (age === 13) return 85;
+        if (age === 14) return 90;
+        return 95;
+      }
+
+      function formatMoney(value) {
+        return new Intl.NumberFormat('ru-RU', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        }).format(value);
+      }
+
+      function formatInt(value) {
+        return new Intl.NumberFormat('ru-RU', {
+          maximumFractionDigits: 0
+        }).format(value);
+      }
+
+      function toggleFields() {
+        stopPersonalWrapEl.classList.toggle('hidden', personalModeEl.value !== 'custom');
+        stopDividendWrapEl.classList.toggle('hidden', dividendModeEl.value !== 'custom');
+      }
+
+      function shouldAddPersonalContribution(year, mode, stopYear) {
+        if (mode === 'none') return false;
+        if (mode === 'all10') return year <= 10;
+        if (mode === 'custom') return year <= stopYear;
+        return false;
+      }
+
+      function shouldReinvestDividends(year, mode, stopYear) {
+        if (mode === 'no') return false;
+        if (mode === 'all') return true;
+        if (mode === 'custom') return year <= stopYear;
+        return false;
+      }
+
+      function calculateModel() {
+        const monthlyContributionStart = parseFloat(monthlyContributionEl.value) || 0;
+        const annualGrowthPercent = parseFloat(annualGrowthEl.value) || 0;
+        const years = parseInt(yearsEl.value, 10) || 15;
+        const initialInvestment = parseFloat(initialInvestmentEl.value) || 0;
+        const initialTrees = parseInt(initialTreesEl.value, 10) || 0;
+
+        const personalMode = personalModeEl.value;
+        const stopPersonalYear = parseInt(stopPersonalYearEl.value, 10) || 0;
+
+        const dividendMode = dividendModeEl.value;
+        const stopReinvestYear = parseInt(stopReinvestYearEl.value, 10) || 0;
+
+        const annualGrowthFactor = 1 + annualGrowthPercent / 100;
+
+        resultBodyEl.innerHTML = '';
+        summaryEl.innerHTML = '';
+
+        const treeLots = [];
+        let totalTrees = 0;
+        let cumulativeIncome = 0;
+        let cumulativePaidDividends = 0;
+        let cashBalance = 0;
+        let totalPersonalInvested = 0;
+
+        if (initialTrees > 0) {
+          const initialPrice = getInitialTreePrice(initialTrees);
+          const expectedCost = initialTrees * initialPrice;
+
+          treeLots.push({ yearBought: 0, count: initialTrees });
+          totalTrees += initialTrees;
+          totalPersonalInvested += initialInvestment;
+          cashBalance += Math.max(0, initialInvestment - expectedCost);
+        }
+
+        for (let year = 1; year <= years; year++) {
+          const monthlyContributionBase =
+            monthlyContributionStart * Math.pow(annualGrowthFactor, Math.max(0, year - 1));
+
+          const addPersonalThisYear = shouldAddPersonalContribution(year, personalMode, stopPersonalYear);
+
+          const monthlyContribution = addPersonalThisYear ? monthlyContributionBase : 0;
+          const annualContribution = addPersonalThisYear ? monthlyContribution * 12 : 0;
+
+          totalPersonalInvested += annualContribution;
+          cashBalance += annualContribution;
+
+          let annualIncome = 0;
+          for (const lot of treeLots) {
+            const age = year - lot.yearBought;
+            annualIncome += lot.
+ count * getTreeIncomeByAge(age);
+          }
+
+          cumulativeIncome += annualIncome;
+
+          const reinvestThisYear = shouldReinvestDividends(year, dividendMode, stopReinvestYear);
+          let paidDividendsThisYear = 0;
+
+          if (reinvestThisYear) {
+            cashBalance += annualIncome;
+          } else {
+            paidDividendsThisYear = annualIncome;
+            cumulativePaidDividends += paidDividendsThisYear;
+          }
+
+          const treePrice = getYearTreePrice(year);
+          const boughtThisYear = Math.floor(cashBalance / treePrice);
+
+          if (boughtThisYear > 0) {
+            treeLots.push({ yearBought: year, count: boughtThisYear });
+            totalTrees += boughtThisYear;
+            cashBalance -= boughtThisYear * treePrice;
+          }
+
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${year}</td>
+            <td>${formatMoney(monthlyContribution)}</td>
+            <td>${formatMoney(annualContribution)}</td>
+            <td>${formatMoney(treePrice)}</td>
+            <td>${formatInt(boughtThisYear)}</td>
+            <td>${formatInt(totalTrees)}</td>
+            <td>${formatMoney(annualIncome)}</td>
+            <td>${formatMoney(cumulativeIncome)}</td>
+            <td>${formatMoney(paidDividendsThisYear)}</td>
+            <td>${formatMoney(cashBalance)}</td>
+          `;
+          resultBodyEl.appendChild(row);
+        }
+
+        let lastYearIncome = 0;
+        for (const lot of treeLots) {
+          const age = years - lot.yearBought;
+          lastYearIncome += lot.count * getTreeIncomeByAge(age);
+        }
+
+        let personalModeTitle = '';
+        if (personalMode === 'all10') personalModeTitle = 'Личные вложения до 10 года';
+        if (personalMode === 'custom') personalModeTitle = Личные вложения до ${stopPersonalYear} года;
+        if (personalMode === 'none') personalModeTitle = 'Без личных ежегодных вложений';
+
+        let dividendModeTitle = '';
+        if (dividendMode === 'no') dividendModeTitle = 'Без реинвеста дивидендов';
+        if (dividendMode === 'all') dividendModeTitle = 'Реинвест дивидендов всегда';
+        if (dividendMode === 'custom') dividendModeTitle = Реинвест дивидендов до ${stopReinvestYear} года;
+
+        const cards = [
+          { title: 'Всего деревьев', value: formatInt(totalTrees) },
+          { title: 'Всего вложено своих денег, $', value: formatMoney(totalPersonalInvested) },
+          { title: 'Доход за последний год, $', value: formatMoney(lastYearIncome) },
+          { title: 'Доход нарастающим итогом, $', value: formatMoney(cumulativeIncome) },
+          { title: 'Выплачено дивидендов, $', value: formatMoney(cumulativePaidDividends) },
+          { title: 'Остаток cash, $', value: formatMoney(cashBalance) },
+          { title: 'Личные вложения', value: personalModeTitle },
+          { title: 'Дивиденды', value: dividendModeTitle }
+        ];
+
+        cards.forEach(card => {
+          const div = document.createElement('div');
+          div.className = 'summary-box';
+          div.innerHTML = <h3>${card.title}</h3><p>${card.value}</p>;
+          summaryEl.appendChild(div);
+        });
+      }
+
+      personalModeEl.addEventListener('change', toggleFields);
+      dividendModeEl.addEventListener('change', toggleFields);
+      calcBtnEl.addEventListener('click', calculateModel);
+
+      toggleFields();
+      calculateModel();
+    })();
+  </script>
+</div>
