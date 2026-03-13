@@ -58,6 +58,12 @@
       outline: none;
     }
 
+    #olive-calc-app input[readonly] {
+      background: #0f172a;
+      color: #93c5fd;
+      cursor: default;
+    }
+
     #olive-calc-app input:focus,
     #olive-calc-app select:focus {
       border-color: #60a5fa;
@@ -107,6 +113,7 @@
       font-weight: 700;
       color: #f8fafc;
       line-height: 1.2;
+      word-break: break-word;
     }
 
     #olive-calc-app .table-wrap {
@@ -131,7 +138,7 @@
       text-align: center;
       font-size: 14px;
       white-space: nowrap;
-      color: #ffffff;
+      color: #ffffff !important;
     }
 
     #olive-calc-app th {
@@ -208,12 +215,12 @@
 
         <div>
           <label for="olive-initialInvestment">Стартовая инвестиция ($)</label>
-          <input type="number" id="olive-initialInvestment" value="0" min="0" step="0.01">
+          <input type="number" id="olive-initialInvestment" value="15000" min="0" step="0.01">
         </div>
 
         <div>
-          <label for="olive-initialTrees">Стартово куплено деревьев</label>
-          <input type="number" id="olive-initialTrees" value="0" min="0" step="1">
+          <label for="olive-initialTrees">Стартово куплено деревьев (авто)</label>
+          <input type="number" id="olive-initialTrees" value="0" min="0" step="1" readonly>
         </div>
 
         <div>
@@ -249,10 +256,11 @@
 
       <div class="note">
         Логика модели:
-        <br>• стартовая покупка: 159 $ если 3–99 деревьев, 149 $ если 100–2999, 139 $ если 3000+
+        <br>• стартовая покупка считается автоматически по сумме стартовой инвестиции
+        <br>• стартовая цена: 159 $ если получается 3–99 деревьев, 149 $ если 100–2999, 139 $ если 3000+
         <br>• годовые покупки: 159 $ с 1 по 5 год, 179 $ с 6 по 10 год, далее 179 $
         <br>• доходность дерева по возрасту: 5-й год = 20 $, далее до 10-го +10 $, после 10-го до 15-го +5 $, затем 95 $
-        <br>• личные вложения и реинвест дивидендов теперь управляются отдельно
+        <br>• личные вложения и реинвест дивидендов управляются отдельно
       </div>
     </div>
 
@@ -301,11 +309,44 @@
       const summaryEl = root.querySelector('#olive-summary');
       const calcBtnEl = root.querySelector('#olive-calc-btn');
 
-      function getInitialTreePrice(treeCount) {
-        if (treeCount >= 3000) return 139;
-        if (treeCount >= 100) return 149;
-        if (treeCount >= 3) return 159;
-        return 159;
+      function getInitialPurchaseFromInvestment(initialInvestment) {
+        if (initialInvestment <= 0) {
+          return {
+            trees: 0,
+            price: 159,
+            usedMoney: 0,
+            leftover: 0
+          };
+        }
+
+        const variants = [
+          { minTrees: 3000, price: 139 },
+          { minTrees: 100, price: 149 },
+          { minTrees: 3, price: 159 }
+        ];
+
+        for (const variant of variants) {
+          const trees = Math.floor(initialInvestment / variant.price);
+          if (trees >= variant.minTrees) {
+            const usedMoney = trees * variant.price;
+            return {
+              trees: trees,
+              price: variant.price,
+              usedMoney: usedMoney,
+              leftover: initialInvestment - usedMoney
+            };
+          }
+        }
+
+        const trees = Math.floor(initialInvestment / 159);
+        const usedMoney = trees * 159;
+
+        return {
+          trees: trees,
+          price: 159,
+          usedMoney: usedMoney,
+          leftover: initialInvestment - usedMoney
+        };
       }
 
       function getYearTreePrice(year) {
@@ -359,12 +400,17 @@
         return false;
       }
 
+      function updateInitialTreesPreview() {
+        const initialInvestment = parseFloat(initialInvestmentEl.value) || 0;
+        const initialPurchase = getInitialPurchaseFromInvestment(initialInvestment);
+        initialTreesEl.value = initialPurchase.trees;
+      }
+
       function calculateModel() {
         const monthlyContributionStart = parseFloat(monthlyContributionEl.value) || 0;
         const annualGrowthPercent = parseFloat(annualGrowthEl.value) || 0;
         const years = parseInt(yearsEl.value, 10) || 15;
         const initialInvestment = parseFloat(initialInvestmentEl.value) || 0;
-        const initialTrees = parseInt(initialTreesEl.value, 10) || 0;
 
         const personalMode = personalModeEl.value;
         const stopPersonalYear = parseInt(stopPersonalYearEl.value, 10) || 0;
@@ -384,14 +430,19 @@
         let cashBalance = 0;
         let totalPersonalInvested = 0;
 
-        if (initialTrees > 0) {
-          const initialPrice = getInitialTreePrice(initialTrees);
-          const expectedCost = initialTrees * initialPrice;
+        const initialPurchase = getInitialPurchaseFromInvestment(initialInvestment);
+        const initialTrees = initialPurchase.trees;
 
-          treeLots.push({ yearBought: 0, count: initialTrees });
-          totalTrees += initialTrees;
+        initialTreesEl.value = initialTrees;
+
+        if (initialInvestment > 0) {
           totalPersonalInvested += initialInvestment;
-          cashBalance += Math.max(0, initialInvestment - expectedCost);
+          cashBalance += initialPurchase.leftover;
+
+          if (initialTrees > 0) {
+            treeLots.push({ yearBought: 0, count: initialTrees });
+            totalTrees += initialTrees;
+          }
         }
 
         for (let year = 1; year <= years; year++) {
@@ -466,6 +517,8 @@
         if (dividendMode === 'custom') dividendModeTitle = `Реинвест дивидендов до ${stopReinvestYear} года`;
 
         const cards = [
+          { title: 'Стартово куплено деревьев', value: formatInt(initialTrees) },
+          { title: 'Стартовая цена дерева, $', value: formatMoney(initialPurchase.price) },
           { title: 'Всего деревьев', value: formatInt(totalTrees) },
           { title: 'Всего вложено своих денег, $', value: formatMoney(totalPersonalInvested) },
           { title: 'Доход за последний год, $', value: formatMoney(lastYearIncome) },
@@ -484,11 +537,13 @@
         });
       }
 
+      initialInvestmentEl.addEventListener('input', updateInitialTreesPreview);
       personalModeEl.addEventListener('change', toggleFields);
       dividendModeEl.addEventListener('change', toggleFields);
       calcBtnEl.addEventListener('click', calculateModel);
 
       toggleFields();
+      updateInitialTreesPreview();
       calculateModel();
     })();
   </script>
